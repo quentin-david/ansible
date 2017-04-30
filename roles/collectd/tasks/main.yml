@@ -1,0 +1,20 @@
+- name: "Uninstall munin-node"
+  apt: name=munin-node state=absent purge=yes
+
+- name: "Install Collectd packages"
+  apt: name={{item}} state=latest autoremove=yes
+  with_items:
+    - collectd
+    - collectd-utils
+
+
+- name: "Install plugins"
+  template: >
+    src=plugin-configs/{{item}}.conf.j2
+    dest=/etc/collectd/collectd.conf.d/{{item}}.conf
+  with_items:
+    - interface
+    - write_graphite
+    - network
+  notify:
+    - Restart collectd

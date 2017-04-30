@@ -1,0 +1,12 @@
+collectd_plugins:
+  - syslog
+  - cpu
+  - interface
+  - load
+  - memory
+  - vmem
+  - swap
+  - disk
+  - rrdtool
+  - network
+  - write_graphite

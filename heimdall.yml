@@ -1,0 +1,10 @@
+---
+
+- name: Heimdall prod
+  hosts: heimdall_web
+  #remote_user: root
+  become: true
+  become_method: sudo
+  roles:
+    - apache
+    - django

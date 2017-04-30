@@ -1,0 +1,72 @@
+- name: Install modue apache wsgi
+  become: true
+  become_method: sudo
+  apt: name={{ item }} state=present
+  with_items:
+    - libapache2-mod-wsgi-py3
+
+- name: enable module wsgi
+  become: true
+  become_method: sudo
+  apache2_module: state=present name=wsgi
+
+- name: disable module python
+  become: true
+  become_method: sudo
+  apache2_module: state=absent name=python
+
+- name: Vhost file
+  become: true
+  become_method: sudo
+  template: src=vhost.conf.j2 dest=/etc/apache2/sites-available/heimdall.conf
+
+- name: a2ensite {{ site_name }}
+  become: true
+  become_method: sudo
+  command: a2ensite {{ site_name }}
+  notify:
+  - restart apache2
+
+- name: a2dissite 000-default.conf
+  become: true
+  become_method: sudo
+  command: a2dissite 000-default
+  notify:
+  - restart apache2
+
+- name: Install Pip3
+  become: true
+  become_method: sudo
+  apt:
+    name: python3-pip
+    state: present
+
+- name: install Pip modules
+  become: true
+  become_method: sudo
+  pip: name={{item}}
+  with_items:
+    - Django
+    - django-postgresql
+    - pandas
+    - matplotlib
+    - numpy
+    - Pillow
+    - py-postgresql
+    - psycopg2
+    - scipy
+    - urllib3
+    - reportlab
+    - django-crispy-forms
+
+- name: Install Git
+  become: true
+  become_method: sudo
+  apt:
+    name: git
+    state: present
+
+- name: Copy the code from repository
+  become: true
+  become_method: sudo
+  git: repo={{ repository }} dest=/var/www/html/{{ site_name }}

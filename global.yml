@@ -1,0 +1,9 @@
+---
+
+- name: every VMs
+  hosts: global_list
+  #remote_user: root
+  become: true
+  become_method: sudo
+  roles:
+    - collectd

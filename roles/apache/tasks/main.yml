@@ -1,0 +1,11 @@
+- name: Install Apache2
+  become: true
+  become_method: sudo
+  apt:
+    name: apache2
+    state: present
+
+- name: Apache2 service state
+  become: true
+  become_method: sudo
+  service: name=apache2 state=started enabled=yes
